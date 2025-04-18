@@ -1,0 +1,21 @@
+-- Banco de dados exe: IV
+CREATE DATABASE dbRosalina;
+USE dbRosalina;
+
+CREATE TABLE tbproduto (
+  IdProp INT PRIMARY KEY,
+  NomeProd VARCHAR(50) NOT NULL,
+  Qtd INT,
+  DataValida DATE NOT NULL,
+  Preço DECIMAL (8,2) NOT NULL
+);
+
+ALTER TABLE tbproduto ADD COLUMN Peso DECIMAL (5,2) NULL, ADD COLUMN Cor VARCHAR (50) NULL, ADD COLUMN Marca VARCHAR (50) NOT NULL;
+
+ALTER TABLE tbproduto DROP COLUMN Cor;
+
+ALTER TABLE tbproduto MODIFY COLUMN Peso DECIMAL (5,2) NOT NULL;
+
+ALTER TABLE tbproduto DROP COLUMN DataValida;
+
+SHOW TABLES;

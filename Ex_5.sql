@@ -1,0 +1,28 @@
+-- Banco de dados exe: V
+CREATE DATABASE dbErica;
+use dbErica;
+
+CREATE TABLE tbVenda (
+    NF INT AUTO_INCREMENT PRIMARY KEY,
+    DataValidade DATETIME NOT NULL
+);
+
+ALTER TABLE tbVenda
+ADD COLUMN Preco DECIMAL(10, 2) NOT NULL, 
+ADD COLUMN Qtd SMALLINT UNSIGNED; 
+
+ALTER TABLE tbVenda
+DROP COLUMN DataValidade;
+
+ALTER TABLE tbVenda
+ADD COLUMN DataVenda DATETIME DEFAULT CURRENT_TIMESTAMP;
+
+CREATE TABLE tbProduto (
+    CodigoB bigint(13) PRIMARY KEY,
+    NomeProd VARCHAR(50) NOT NULL
+);
+
+ALTER TABLE tbVenda
+ADD COLUMN CodigoB BIGINT(13),
+ADD CONSTRAINT fk_tbvenda_tbproduto
+FOREIGN KEY (CodigoB) REFERENCES tbproduto(CodigoB);
