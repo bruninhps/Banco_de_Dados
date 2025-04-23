@@ -26,7 +26,7 @@ USE dbDistribuidora;
  
  create table tbEndereco(
 	Logradouro varchar(200) not null,
-	CEP char(8) primary key /*FK*/ not null,
+	CEP char(9) primary key /*FK*/ not null,
 	BairroId int /*FK*/ not null,
 	CidadeId int /*fk*/ not null,
 	UFId int /*FK*/ not null
@@ -49,9 +49,9 @@ USE dbDistribuidora;
  
  create table tbFornecedor(
 	Codigo int primary key auto_increment ,
-	CNPJ char(14) unique,
+	CNPJ char(18) unique,
 	Nome varchar(200) not null,
-	Telefone char(11) not null
+	Telefone char(14) not null
 );
  
  create table tbProduto(
@@ -160,14 +160,14 @@ foreign key (Codigo) references tbFornecedor(Codigo);
 
 -- Inserção direta em tbFORNECEDOR
 INSERT INTO tbFORNECEDOR (Codigo, Nome, CNPJ, Telefone) VALUES
-(1, 'Revenda Chico Loco', '12.456.789/371-23', '(11) 9 3456 7897'),
-(2, 'José Faz Tudo S/A', '13.456.789/371-23', '(11) 9 3456 7898'),
-(3, 'Vadalto Entregas', '14.456.789/371-23', '(11) 9 3456 7899'),
-(4, 'Astrogildo das Estrelas', '15.456.789/371-23', '(11) 9 3456 7800'),
-(5, 'Amoroso e Doce', '16.456.789/371-23', '(11) 9 3456 7801'),
-(6, 'Marcelo Dedal', '17.456.789/371-23', '(11) 9 3456 7802'),
-(7, 'Franciscano Cachaça', '18.456.789/371-23', '(11) 9 3456 7803'),
-(8, 'Joãozinho Chupeta', '19.456.789/371-23', '(11) 9 3456 7804');
+(1, 'Revenda Chico Loco', '12.456.789/371-23', '(11)9345-67897'),
+(2, 'José Faz Tudo S/A', '13.456.789/371-23', '(11)93456-7898'),
+(3, 'Vadalto Entregas', '14.456.789/371-23', '(11)93456-7899'),
+(4, 'Astrogildo das Estrelas', '15.456.789/371-23', '(11)93456-7800'),
+(5, 'Amoroso e Doce', '16.456.789/371-23', '(11)93456-7801'),
+(6, 'Marcelo Dedal', '17.456.789/371-23', '(11)93456-7802'),
+(7, 'Franciscano Cachaça', '18.456.789/371-23', '(11)93456-7803'),
+(8, 'Joãozinho Chupeta', '19.456.789/371-23', '(11)93456-7804');
 describe tbFornecedor;
 
 -- Procedure para tbCIDADE
@@ -225,17 +225,20 @@ CALL spInsertBairro(3, 'Pirituba');
 CALL spInsertBairro(4, 'Liberdade');
 
 -- Procedure para tbPRODUTO
+alter table tbProduto
+modify column Valor decimal(8,2);
+
 DELIMITER $$
 CREATE PROCEDURE spInsertProduto (
-    IN CodigoBaras char(14),
+    IN CodigoBarras char(14),
     IN Nome VARCHAR(200),
-    IN Valor char(9),
+    IN Valor decimal(8,2),
     IN Qtd INT
 )
 BEGIN
-    INSERT INTO tbProduto (CodigoDeBarras, Nome, Valor, Qtd)
+    INSERT INTO tbProduto (CodigoBarras, Nome, Valor, Qtd)
     VALUES (CodigoBarras, Nome, Valor, Qtd);
-END $
+END $$
 DELIMITER ; 
 
 CALL spInsertProduto(12345678910111, 'Rei de Papel Mache', 54.61, 120);
@@ -246,29 +249,114 @@ CALL spInsertProduto(12345678910115, 'Maçã Laranja', 99.44, 120);
 CALL spInsertProduto(12345678910116, 'Boneco do Hitler', 124.00, 200);
 CALL spInsertProduto(12345678910117, 'Farinha de Suruí', 50.00, 200);
 CALL spInsertProduto(12345678910118, 'Zelador de Cemitério', 24.50, 100);
+use dbDistribuidora;
+describe tbProduto;
+
 
 -- Procedure para tbENDERECO
 DELIMITER $$
 CREATE PROCEDURE spInsertEndereco (
     IN Logradouro VARCHAR(200),
-	in CEP char(8),
-    in BairroId int,
-    in CidadeId int,
-    in UFId int
+	in CEP char(9)
 )
 BEGIN
-    INSERT INTO tbEndereco (Logradouro, Bairro, Cidade, UF, CEP)
-    VALUES (Logradouro, Bairro, Cidade, UF, CEP);
+    INSERT INTO tbEndereco (Logradouro, CEP)
+    VALUES (Logradouro, CEP);
 END $$
 DELIMITER ;
-describe tbEndereco;
-CALL spInsertEndereco('Rua da Federal', 'Lapa', 'São Paulo', 'SP', '12345-050');
-CALL spInsertEndereco('Av Brasil', 'Lapa', 'Campinas', 'SP', '12345-051');
-CALL spInsertEndereco('Rua Liberdade', 'Consolação', 'São Paulo', 'SP', '12345-052');
-CALL spInsertEndereco('Av Paulista', 'Penha', 'Rio de Janeiro', 'RJ', '12345-053');
-CALL spInsertEndereco('Rua Ximbú', 'Penha', 'Rio de Janeiro', 'RJ', '12345-054');
-CALL spInsertEndereco('Rua Piu XI', 'Penha', 'Campinas', 'SP', '12345-055');
-CALL spInsertEndereco('Rua Chocolate', 'Aclimação', 'Barra Mansa', 'RJ', '12345-056');
-CALL spInsertEndereco('Rua Pão na Chapa', 'Barra Funda', 'Ponta Grossa', 'RS', '12345-057');
 
 
+call spInsertEndereco (12345051, 'Av Brasil');
+call spInsertEndereco (12345052, 'Rua Liberdade');
+call spInsertEndereco (12345053, 'Av Paulista');
+call spInsertEndereco (12345054, 'Rua Ximbú');
+call spInsertEndereco (12345055,'Rua Piu XI');
+call spInsertEndereco (12345056,'Rua Chocolate');
+call spInsertEndereco (12345057, 'Rua Pão na Chapa');
+
+-- Procedure para tbClientePF
+delimiter $$
+create procedure spInsertClientePF(
+	in CPF char(11), 
+    in RG char(9), 
+    in RG_Dig char(1), 
+    in Nasc date)
+begin
+
+	insert into tbClientePF(CPF, RG, RG_Dig, Nasc)
+	values(CPF, RG, RG_Dig, Nasc);
+end $$
+delimiter ;
+describe tbClientePF;
+
+call spInsertClientePF (12345678911,12345678,0,'2000-10-12');
+call spInsertClientePF (12345678912,12345679,0,'2001-11-21');
+call spInsertClientePF (12345678913,12345680,0,'2001-06-01');
+call spInsertClientePF (12345678914,12345681,'X',2004-04-05);
+call spInsertClientePF (12345678915,12345682,0,'2002-07-15');
+
+-- Procedure para tbClientesPJ
+delimiter $$
+create procedure spInsertClientePJ(
+	in CNPJ char(14),
+    In IE char(11) 
+)
+begin
+	insert into tbClientePJ (CNPJ, IE)
+    values (CNPJ, IE);
+end$$
+delimiter ;
+describe tbClientePJ;
+
+call callspInsertClientePJ (12345678912345,98765432198);
+call callspInsertClientePJ (12345678912346,98765432199);
+call callspInsertClientePJ (12345678912347,98765432100);
+call callspInsertClientePJ (12345678912348,98765432101);
+call callspInsertClientePJ (12345678912349,98765432102);
+
+-- Procedure para 
+describe tbCompra;
+
+delimiter $$
+create procedure spInsertCompra(  
+	IN pNotaFiscal INT,
+    IN pFornecedor VARCHAR(100),
+    IN pDataCompra VARCHAR(10),
+    IN pCodigoBarras VARCHAR(20),
+    IN pValorItem DECIMAL(10,2),
+    IN pQtd INT,
+    IN pQtdTotal INT,
+    IN pValorTotal DECIMAL(10,2)
+)
+begin 
+	declare CodigoBarras int;
+    declare Codigo int;
+
+    SELECT Codigo INTO IdFornecedor
+    FROM Fornecedores
+    WHERE nome = Fornecedor;
+    
+	SELECT CodigoBarras INTO IdProduto
+    FROM Produtos
+    WHERE codigo_barras = CodigoBarras;
+    
+	IF IdFornecedor IS NOT NULL AND IdProduto IS NOT NULL THEN
+    
+	INSERT INTO Compras (nota_fiscal, 
+    id_fornecedor, 
+    data_compra, 
+    id_produto, 
+    valor_item, 
+    qtd, qtd_total, 
+    valor_total)
+    
+	VALUES (pNotaFiscal, 
+    vIdFornecedor, 
+    STR_TO_DATE(pDataCompra, '%d/%m/%Y'), 
+    vIdProduto, 
+    pValorItem, 
+    pQtd, 
+    pQtdTotal, 
+    pValorTotal);
+
+end$$
