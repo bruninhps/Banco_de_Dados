@@ -8,7 +8,7 @@ USE dbDistribuidora;
 	NomeCli varchar(200) not null,
 	NumEnd  char(6) not null,
 	CompEnd varchar(50) null,
-	CepCli char(8) not null /*FK (tbEndereco)*/
+	CepCli char(8) null /*FK (tbEndereco)*/
     
  );
  
@@ -81,7 +81,7 @@ USE dbDistribuidora;
 	DataVenda date not null,
 	TotalVenda char(8) not null,
 	Id_Cli int /*FK*/ not null,
-	NF int /*FK*/ not null
+	NF int /*FK*/ null
 );
  
  create table tbItemVenda(
