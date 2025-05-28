@@ -1,5 +1,5 @@
 -- Banco de dados exe: IV
-CREATE DATABASE dbRosalina;
+
 USE dbRosalina;
 
 CREATE TABLE tbproduto (
